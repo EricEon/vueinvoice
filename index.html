@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>INVOICE ONE</title>
+</head>
+
+<body>
+    <div class="invoice" id="app">
+        <header class="head">
+
+            <div class="company-image">
+                <hr>
+                <img src="https://images.unsplash.com/photo-1516876437184-593fda40c7ce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1352&q=80" alt="company_logo" class=logo-img>
+            </div>
+
+            <div class="content-head">
+                <h1 class="lg-heading">INVOICE</h1>
+                <hr>
+            </div>
+        </header>
+        <section class="summary">
+            <div class="box-head">
+                <div class="invoice-no">
+                    <i class="fas fa-file fa-2x"></i>
+                    <h3>INVOICE NO #</h3>
+                    <h4><input type="text" name="invoice_number" v-model="id" style="text-align: center;"></h4>
+                </div>
+                <div class="invoice-date emphasis">
+                    <i class="fa fa-calendar-check fa-2x"></i>
+                    <h3>DUE DATE: </h3>
+                    <h4><input type="date" name="invoice_due_date" v-model="due_date" style="text-align: right;"></h4>
+                </div>
+            </div>
+
+            <div class="address">
+                <address>
+                    <h3>TO:</h3>
+                    <h4>
+                        <p>
+                            <input type="text" name="customer_name" v-model="name"
+                                style="text-transform: capitalize;width:100%;" placeholder="NAME">
+                        </p>
+                    </h4>
+                    <h5>
+                        <p><input type="text" name="customer_address" v-model="address"
+                                style="text-transform: capitalize;" placeholder="ADDRESS"></p>
+                    </h5>
+                </address>
+            </div>
+        </section>
+        <section class="invoice-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <p></p>
+                        </th>
+                        <th>DESCRIPTION</th>
+                        <th>QUANTITY</th>
+                        <th>UNIT PRICE</th>
+                        <th>TOTAL PRICE</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr v-for="(item,k) in items" :key="k">
+                        <td scope="row" class="trashIconContainer" style="width: 1px;">
+                            <div class="delete-wpr btn btn-info">
+                                <a class="delete" title="Remove row" class=""><i class="far fa-trash-alt"
+                                        @click="deleteRow(k, item)"></i></a> </div>
+                        </td>
+                        <td>
+
+                            <textarea type="text" name="item description" v-model="item.description"
+                                placeholder="Enter Description"
+                                style="text-transform: capitalize;width:487px;height:54px;margin:0;padding:0;"></textarea>
+                        </td>
+                        <td>
+                            <input type="number" name="quantity" min=0 v-model="item.quantity"
+                                @change="calculateItemTotal(item)" style="text-align: center; vertical-align: middle;">
+                        </td>
+                        <td>
+                            <input type="number" name="price" min=0 v-model="item.price"
+                                @change="calculateItemTotal(item)" style="text-align: center;">
+                        </td>
+                        <td>
+                            <p>{{item.total}}</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="3" style="outline: none !important;">
+
+                        </td>
+                        <!-- <td>1</td> -->
+                        <td>SUB TOTAL</td>
+                        <td style="background-color:#e86345;color:white;">
+                            <p>{{subtotal}}</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="3" style="outline: none !important;">
+                        </td>
+
+                        <td>TAX</td>
+                        <td style="background-color:#e86345;color:white;">{{taxamount}}</td>
+                    </tr>
+                    <!-- <tr>
+                        <td colspan="3" style="outline: none !important;">
+
+                        </td>
+                        
+                        <td>DISCOUNT</td>
+                        <td style="background-color:#e86345;color:white;">{{invoice.discount}}</td>
+                    </tr> -->
+                    <!-- Grand Total -->
+                    <tr>
+                        <td colspan="3" style="outline: none !important;padding:0;">
+                            <h3 style="padding: 0; margin:0;">PAYMENT METHOD</h3>
+                            <p style="padding: 0; margin:0; ">SUPER BANK</p>
+                            <p style="padding: 0; margin:0; ">Account Number : <em>00----12478</em></p>
+                        </td>
+                        <!-- <td>1</td> -->
+                        <td style="background-color:#e86345;color:white;">GRAND TOTAL</td>
+                        <td style="background-color:#e86345;color:white;">{{totalPrice}}</td>
+                    </tr>
+                    <!-- Signature Section -->
+                    <tr>
+                        <td colspan="3" style="outline: none !important;text-align:center;">
+                            <h2>THANK YOU!</h2>
+                        </td>
+                        <!-- <td>1</td> -->
+                        <td style="background-color:#fff;text-align:end;padding-right:1rem;outline:none;padding-top:1rem;"
+                            colspan="2">
+                            <p style="text-align:center;padding-top:2rem;">
+                                ................................................
+                            </p>
+                            <p style="text-align:center;">
+                                <span>Samuel Hanson
+                                </span>
+                                <br>
+                                <small>MANAGER</small>
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- Terms And Conditions -->
+                    <tr>
+                        <td colspan="5" style="outline: none !important;background-color:#e86345;color:white;">
+                            <p>Terms and Conditions : Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor
+                                impedit nostrum sequi
+                                maiores eaque facere asperiores! Laudantium numquam ab rerum voluptatem dolorum odit
+                                earum molestiae, libero enim, nemo beatae? Praesentium.</p>
+                        </td>
+
+                    </tr>
+                </tbody>
+                <button type='button' class="btn btn-info delete-wpr" @click="addNewRow">
+                    <i class="fas fa-plus-circle"></i>
+                    Add
+                </button>
+                <tfoot>
+                    <tr>
+                        <td style="padding-top:1rem;outline: none !important;" colspan="2"><i class="fa fa-phone"></i>
+                            <p>+233214575784</p>
+                        </td>
+                        <td style="padding-top:1rem;outline: none !important;" colspan="2"><i
+                                class="fa fa-envelope"></i>
+                            <p>r12__09oop@gmail.com</p>
+                        </td>
+                        <td colspan="2" style="padding-top:1rem;outline: none !important;">
+                            <i class="fa fa-home"></i>
+
+                            <p style="margin:0;">House No5, OkaiKoi Road</p>
+                            <p style="margin:0;">0214575784</p>
+                            <p style="margin:0;">r123sswsx----@gmail.com</p>
+
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
